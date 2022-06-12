@@ -6,18 +6,18 @@ using UnityEngine.Events;
 
 public class Brick : MonoBehaviour
 {
-    public UnityEvent<int> onDestroyed;
-    
+    public UnityEvent<int> OnDestroyed;
+
     public int PointValue;
 
-    void Start()
+    private void Start()
     {
-        var renderer = GetComponentInChildren<Renderer>();
+        Renderer renderer = GetComponentInChildren<Renderer>();
 
         MaterialPropertyBlock block = new MaterialPropertyBlock();
         switch (PointValue)
         {
-            case 1 :
+            case 1:
                 block.SetColor("_BaseColor", Color.green);
                 break;
             case 2:
@@ -35,8 +35,8 @@ public class Brick : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        onDestroyed.Invoke(PointValue);
-        
+        OnDestroyed.Invoke(PointValue);
+
         //slight delay to be sure the ball have time to bounce
         Destroy(gameObject, 0.2f);
     }
