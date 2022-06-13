@@ -724,6 +724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Instance: {fileID: 0}
+  _playerNameInput: {fileID: 1502231364}
 --- !u!1 &958704935
 GameObject:
   m_ObjectHideFlags: 0
