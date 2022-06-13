@@ -71,7 +71,7 @@ public class MainManager : MonoBehaviour
     private void AddPoint(int point)
     {
         _points += point;
-        _scoreText.text = $"Score : {_points}";
+        _scoreText.text = $"Your score : {_points}";
     }
 
     public void GameOver()
