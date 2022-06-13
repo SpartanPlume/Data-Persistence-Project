@@ -10,6 +10,7 @@ public class MenuManager : MonoBehaviour
     [System.Serializable]
     private class SaveData
     {
+        [System.Serializable]
         public class BestPlayData
         {
             public string PlayerName;
@@ -18,12 +19,18 @@ public class MenuManager : MonoBehaviour
 
         public string LastPlayerName;
         public BestPlayData BestPlay;
+
+        public SaveData()
+        {
+            BestPlay = new BestPlayData();
+        }
     }
 
-    public MenuManager Instance;
+    public static MenuManager Instance;
     private SaveData _saveData;
 
     [SerializeField] private TMP_InputField _playerNameInput;
+    [SerializeField] private TextMeshProUGUI _highScoreText;
 
     // Start is called before the first frame update
     private void Start()
@@ -61,6 +68,7 @@ public class MenuManager : MonoBehaviour
 
             // Initialize variables with the save data
             _playerNameInput.text = _saveData.LastPlayerName;
+            _highScoreText.text = GetHighScore();
         }
         else
         {
@@ -73,5 +81,20 @@ public class MenuManager : MonoBehaviour
     {
         string json = JsonUtility.ToJson(_saveData);
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+    }
+
+    public void UpdateBestPlay(int score)
+    {
+        if (score > _saveData.BestPlay.Score)
+        {
+            _saveData.BestPlay.PlayerName = _saveData.LastPlayerName;
+            _saveData.BestPlay.Score = score;
+            SaveSaveData();
+        }
+    }
+
+    public string GetHighScore()
+    {
+        return $"Highscore: {_saveData.BestPlay.PlayerName}: {_saveData.BestPlay.Score}";
     }
 }

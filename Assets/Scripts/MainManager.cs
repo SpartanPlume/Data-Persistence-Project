@@ -11,8 +11,10 @@ public class MainManager : MonoBehaviour
     [SerializeField] private Rigidbody _ball;
 
     [SerializeField] private Text _scoreText;
+    [SerializeField] private Text _highScoreText;
     [SerializeField] private GameObject _gameOverText;
 
+    private MenuManager _menuManager;
     private bool _hasStarted = false;
     private bool _isGameOver = false;
     private int _points;
@@ -33,6 +35,12 @@ public class MainManager : MonoBehaviour
                 brick.PointValue = pointCountArray[i];
                 brick.OnDestroyed.AddListener(AddPoint);
             }
+        }
+
+        _menuManager = MenuManager.Instance;
+        if (_menuManager)
+        {
+            _highScoreText.text = _menuManager.GetHighScore();
         }
     }
 
@@ -70,5 +78,10 @@ public class MainManager : MonoBehaviour
     {
         _isGameOver = true;
         _gameOverText.SetActive(true);
+        if (_menuManager)
+        {
+            _menuManager.UpdateBestPlay(_points);
+            _highScoreText.text = _menuManager.GetHighScore();
+        }
     }
 }

@@ -502,7 +502,8 @@ MonoBehaviour:
   _lineCount: 6
   _ball: {fileID: 177912862}
   _scoreText: {fileID: 188020406}
-  _gameOverText: {fileID: 2078529054}
+  _highScoreText: {fileID: 2078529056}
+  _gameOverText: {fileID: 474497238}
 --- !u!1 &455529321
 GameObject:
   m_ObjectHideFlags: 0
