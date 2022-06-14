@@ -9,6 +9,7 @@ public class MainManager : MonoBehaviour
     [SerializeField] private Brick _brickPrefab;
     [SerializeField] private int _lineCount = 6;
     [SerializeField] private Rigidbody _ball;
+    [SerializeField] private GameObject _paddle;
 
     [SerializeField] private Text _scoreText;
     [SerializeField] private Text _highScoreText;
@@ -19,24 +20,11 @@ public class MainManager : MonoBehaviour
     private bool _isGameOver = false;
     private int _points;
 
+    public int BrickCount = 0;
+
     // Start is called before the first frame update
     private void Start()
     {
-        const float step = 0.6f;
-        int perLine = Mathf.FloorToInt(4.0f / step);
-
-        int[] pointCountArray = new[] { 1, 1, 2, 2, 5, 5 };
-        for (int i = 0; i < _lineCount; ++i)
-        {
-            for (int x = 0; x < perLine; ++x)
-            {
-                Vector3 position = new Vector3(-1.5f + step * x, 2.5f + i * 0.3f, 0);
-                var brick = Instantiate(_brickPrefab, position, Quaternion.identity);
-                brick.PointValue = pointCountArray[i];
-                brick.OnDestroyed.AddListener(AddPoint);
-            }
-        }
-
         _menuManager = MenuManager.Instance;
         if (_menuManager)
         {
@@ -46,6 +34,11 @@ public class MainManager : MonoBehaviour
 
     private void Update()
     {
+        if (BrickCount <= 0)
+        {
+            StartLevel();
+        }
+
         if (!_hasStarted)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -66,6 +59,33 @@ public class MainManager : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
+    }
+
+    private void StartLevel()
+    {
+        _hasStarted = false;
+
+        // Reset Ball to initial position
+        _ball.velocity = Vector3.zero;
+        _ball.transform.position = _paddle.transform.position + new Vector3(0.0f, 0.15f, 0.0f);
+        _ball.transform.SetParent(_paddle.transform);
+
+        // Create brick objects to destroy
+        const float step = 0.6f;
+        int perLine = Mathf.FloorToInt(4.0f / step);
+        int[] pointCountArray = new[] { 1, 1, 2, 2, 5, 5 };
+        for (int i = 0; i < _lineCount; ++i)
+        {
+            for (int x = 0; x < perLine; ++x)
+            {
+                Vector3 position = new Vector3(-1.5f + step * x, 2.5f + i * 0.3f, 0);
+                Brick brick = Instantiate(_brickPrefab, position, Quaternion.identity);
+                brick.MainManager = this;
+                brick.PointValue = pointCountArray[i];
+                brick.OnDestroyed.AddListener(AddPoint);
+            }
+        }
+        BrickCount = _lineCount * perLine;
     }
 
     private void AddPoint(int point)

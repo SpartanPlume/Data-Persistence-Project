@@ -501,9 +501,11 @@ MonoBehaviour:
   _brickPrefab: {fileID: 897975713663390409, guid: 63f25b9733d2bcd4fa2ff6de1264c739, type: 3}
   _lineCount: 6
   _ball: {fileID: 177912862}
+  _paddle: {fileID: 97436041}
   _scoreText: {fileID: 188020406}
   _highScoreText: {fileID: 2078529056}
   _gameOverText: {fileID: 474497238}
+  BrickCount: 0
 --- !u!1 &455529321
 GameObject:
   m_ObjectHideFlags: 0
