@@ -5,21 +5,26 @@ using UnityEngine;
 public class Paddle : MonoBehaviour
 {
     [SerializeField] private float _speed = 2.0f;
+    [SerializeField] private float _fastTypeSpeed = 5.0f;
     [SerializeField] private float _maxMovement = 2.0f;
 
-    // Start is called before the first frame update
-    private void Start()
-    {
-
-    }
+    [SerializeField] private List<GameObject> _paddleTypes;
+    private int _currentPaddleTypeIndex;
 
     // Update is called once per frame
     private void Update()
     {
+        MovePaddle();
+        ChangePaddle();
+    }
+
+    private void MovePaddle()
+    {
         float input = Input.GetAxis("Horizontal");
 
         Vector3 pos = transform.position;
-        pos.x += input * _speed * Time.deltaTime;
+        float currentSpeed = _currentPaddleTypeIndex == 3 ? _fastTypeSpeed : _speed;
+        pos.x += input * currentSpeed * Time.deltaTime;
 
         if (pos.x > _maxMovement)
             pos.x = _maxMovement;
@@ -27,5 +32,21 @@ public class Paddle : MonoBehaviour
             pos.x = -_maxMovement;
 
         transform.position = pos;
+    }
+
+    private void ChangePaddle()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            _paddleTypes[_currentPaddleTypeIndex].SetActive(false);
+            _currentPaddleTypeIndex = (_paddleTypes.Count + _currentPaddleTypeIndex - 1) % _paddleTypes.Count;
+            _paddleTypes[_currentPaddleTypeIndex].SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.V))
+        {
+            _paddleTypes[_currentPaddleTypeIndex].SetActive(false);
+            _currentPaddleTypeIndex = (_currentPaddleTypeIndex + 1) % _paddleTypes.Count;
+            _paddleTypes[_currentPaddleTypeIndex].SetActive(true);
+        }
     }
 }
