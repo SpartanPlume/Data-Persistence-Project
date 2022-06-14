@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
 public class MenuManager : MonoBehaviour
 {
+    [DllImport("__Internal")]
+    private static extern void SyncFiles();
+
     [System.Serializable]
     private class SaveData
     {
@@ -80,6 +84,12 @@ public class MenuManager : MonoBehaviour
     {
         string json = JsonUtility.ToJson(_saveData);
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+
+        // WebGL bug: Writing in file is not instantaneous and must be done manually
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            SyncFiles();
+        }
     }
 
     public void UpdateBestPlay(int score)
