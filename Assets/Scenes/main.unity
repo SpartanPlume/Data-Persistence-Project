@@ -382,6 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9378aa3f6eac646479e54cd5932ffd3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxVelocity: 5
 --- !u!1 &188020404
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,8 +619,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _brickPrefab: {fileID: 897975713663390409, guid: 63f25b9733d2bcd4fa2ff6de1264c739, type: 3}
   _lineCount: 6
-  _ball: {fileID: 177912862}
   _paddle: {fileID: 1710611162}
+  _ball: {fileID: 177912862}
+  _initialBallVelocity: 1.5
+  _ballVelocityIncrement: 0.5
   _scoreText: {fileID: 188020406}
   _highScoreText: {fileID: 2078529056}
   _gameOverText: {fileID: 474497238}

@@ -8,8 +8,11 @@ public class MainManager : MonoBehaviour
 {
     [SerializeField] private Brick _brickPrefab;
     [SerializeField] private int _lineCount = 6;
-    [SerializeField] private Rigidbody _ball;
+
     [SerializeField] private GameObject _paddle;
+    [SerializeField] private Rigidbody _ball;
+    [SerializeField] private float _initialBallVelocity = 1.5f;
+    [SerializeField] private float _ballVelocityIncrement = 0.5f;
 
     [SerializeField] private Text _scoreText;
     [SerializeField] private Text _highScoreText;
@@ -49,7 +52,7 @@ public class MainManager : MonoBehaviour
                 forceDir.Normalize();
 
                 _ball.transform.SetParent(null);
-                _ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
+                _ball.AddForce(forceDir * _initialBallVelocity, ForceMode.VelocityChange);
             }
         }
         else if (_isGameOver)
@@ -64,6 +67,7 @@ public class MainManager : MonoBehaviour
     private void StartLevel()
     {
         _hasStarted = false;
+        _initialBallVelocity += _ballVelocityIncrement;
 
         // Reset Ball to initial position
         _ball.velocity = Vector3.zero;
