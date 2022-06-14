@@ -39,13 +39,16 @@ public class MenuManager : MonoBehaviour
         {
             // Destroy the new gameObject to not have a duplicate in the scene
             Destroy(gameObject);
+            return;
         }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            LoadSaveData();
-        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        LoadSaveData();
+
+        // Initialize variables with the save data
+        _playerNameInput.text = _saveData.LastPlayerName;
+        _highScoreText.text = GetHighScore();
     }
 
     public void StartGame()
@@ -65,10 +68,6 @@ public class MenuManager : MonoBehaviour
         {
             string json = File.ReadAllText(path);
             _saveData = JsonUtility.FromJson<SaveData>(json);
-
-            // Initialize variables with the save data
-            _playerNameInput.text = _saveData.LastPlayerName;
-            _highScoreText.text = GetHighScore();
         }
         else
         {
