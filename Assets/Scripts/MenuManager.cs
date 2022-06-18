@@ -22,11 +22,11 @@ public class MenuManager : MonoBehaviour
         }
 
         public string LastPlayerName;
-        public BestPlayData BestPlay;
+        public List<BestPlayData> BestPlays;
 
         public SaveData()
         {
-            BestPlay = new BestPlayData();
+            BestPlays = new List<BestPlayData>();
         }
     }
 
@@ -41,9 +41,8 @@ public class MenuManager : MonoBehaviour
     {
         if (Instance)
         {
-            // Destroy the new gameObject to not have a duplicate in the scene
-            Destroy(gameObject);
-            return;
+            // Destroy the old gameObject to not have a duplicate in the scene
+            Destroy(Instance.gameObject);
         }
 
         Instance = this;
@@ -52,7 +51,7 @@ public class MenuManager : MonoBehaviour
 
         // Initialize variables with the save data
         _playerNameInput.text = _saveData.LastPlayerName;
-        _highScoreText.text = GetHighScore();
+        _highScoreText.text = GetBestHighScore();
     }
 
     public void StartGame()
@@ -63,6 +62,12 @@ public class MenuManager : MonoBehaviour
 
         // Change scene to main scene (the actual game)
         SceneManager.LoadScene(1);
+    }
+
+    public void ShowHighscores()
+    {
+        // Change scene to highscores scene
+        SceneManager.LoadScene(2);
     }
 
     private void LoadSaveData()
@@ -92,18 +97,50 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void UpdateBestPlay(int score)
+    public void AddNewBestPlay(int score)
     {
-        if (score > _saveData.BestPlay.Score)
+        SaveData.BestPlayData newBestPlay = new SaveData.BestPlayData();
+        newBestPlay.PlayerName = _saveData.LastPlayerName;
+        newBestPlay.Score = score;
+        bool hasAddedNewBestPlay = false;
+        for (int i = 0; i < _saveData.BestPlays.Count; ++i)
         {
-            _saveData.BestPlay.PlayerName = _saveData.LastPlayerName;
-            _saveData.BestPlay.Score = score;
-            SaveSaveData();
+            SaveData.BestPlayData bestPlay = _saveData.BestPlays[i];
+            if (score > bestPlay.Score)
+            {
+                _saveData.BestPlays.Insert(i, newBestPlay);
+                break;
+            }
         }
+        if (!hasAddedNewBestPlay)
+        {
+            _saveData.BestPlays.Add(newBestPlay);
+        }
+        if (_saveData.BestPlays.Count > 5)
+        {
+            _saveData.BestPlays.RemoveAt(5);
+        }
+        SaveSaveData();
     }
 
-    public string GetHighScore()
+    public string GetBestHighScore()
     {
-        return $"Highscore: {_saveData.BestPlay.PlayerName}: {_saveData.BestPlay.Score}";
+        SaveData.BestPlayData bestPlay = _saveData.BestPlays.Count > 0 ? _saveData.BestPlays[0] : new SaveData.BestPlayData();
+        return $"Highscore: {bestPlay.PlayerName}: {bestPlay.Score}";
+    }
+
+    public string GetHighScores()
+    {
+        if (_saveData.BestPlays.Count == 0)
+        {
+            return "No highscore yet";
+        }
+        string highscoresText = "";
+        for (int i = 0; i < _saveData.BestPlays.Count && i < 5; ++i)
+        {
+            SaveData.BestPlayData bestPlay = _saveData.BestPlays[i];
+            highscoresText += $"{i + 1}. {bestPlay.PlayerName} - {bestPlay.Score}\n";
+        }
+        return highscoresText;
     }
 }

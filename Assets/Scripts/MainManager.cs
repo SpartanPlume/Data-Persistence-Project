@@ -31,7 +31,7 @@ public class MainManager : MonoBehaviour
         _menuManager = MenuManager.Instance;
         if (_menuManager)
         {
-            _highScoreText.text = _menuManager.GetHighScore();
+            _highScoreText.text = _menuManager.GetBestHighScore();
         }
     }
 
@@ -104,8 +104,8 @@ public class MainManager : MonoBehaviour
         _gameOverText.SetActive(true);
         if (_menuManager)
         {
-            _menuManager.UpdateBestPlay(_points);
-            _highScoreText.text = _menuManager.GetHighScore();
+            _menuManager.AddNewBestPlay(_points);
+            _highScoreText.text = _menuManager.GetBestHighScore();
         }
     }
 }
