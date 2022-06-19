@@ -109,6 +109,7 @@ public class MenuManager : MonoBehaviour
             if (score > bestPlay.Score)
             {
                 _saveData.BestPlays.Insert(i, newBestPlay);
+                hasAddedNewBestPlay = true;
                 break;
             }
         }
